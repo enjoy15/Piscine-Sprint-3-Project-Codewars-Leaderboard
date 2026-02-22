@@ -141,6 +141,13 @@ async function handleFetchLeaderboard() {
   }
 }
 
+function handleLanguageChange() {
+  const selectedLanguage = document.getElementById("languageSelect").value;
+  const leaderboard = createLeaderboard(allUsersData, selectedLanguage);
+  displayLeaderboard(leaderboard);
+}
+
 if (typeof window !== "undefined") {
   document.getElementById("fetchButton").addEventListener("click", handleFetchLeaderboard);
+  document.getElementById("languageSelect").addEventListener("change", handleLanguageChange);
 }
