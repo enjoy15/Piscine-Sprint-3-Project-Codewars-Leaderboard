@@ -2,10 +2,20 @@ let allUsersData = [];
 
 export async function fetchUserData(username) {
   const url = `https://www.codewars.com/api/v1/users/${username}`;
-  const response = await fetch(url);
+  let response;
+
+  try {
+    response = await fetch(url);
+  } catch {
+    throw new Error("Unable to reach Codewars API. Please check your internet connection and try again.");
+  }
 
   if (!response.ok) {
-    throw new Error(`User "${username}" not found`);
+    if (response.status === 404) {
+      throw new Error(`User "${username}" not found`);
+    }
+
+    throw new Error("Codewars API request failed. Please try again in a moment.");
   }
 
   return await response.json();
