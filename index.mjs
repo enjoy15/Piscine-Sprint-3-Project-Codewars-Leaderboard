@@ -40,6 +40,25 @@ export function getScore(user, language) {
     : null;
 }
 
+export function createLeaderboard(usersData, language) {
+  const usersWithScores = [];
+
+  for (const user of usersData) {
+    const score = getScore(user, language);
+
+    if (score !== null) {
+      usersWithScores.push({
+        username: user.username,
+        clan: user.clan || "",
+        score
+      });
+    }
+  }
+
+  usersWithScores.sort((a, b) => b.score - a.score);
+  return usersWithScores;
+}
+
 async function handleFetchLeaderboard() {
   const input = document.getElementById("usernames").value;
   const usernames = input
