@@ -59,6 +59,31 @@ export function createLeaderboard(usersData, language) {
   return usersWithScores;
 }
 
+function showMessage(text, isError = false) {
+  const messageDiv = document.getElementById("message");
+  messageDiv.textContent = text;
+  messageDiv.className = isError ? "error" : "loading";
+  messageDiv.classList.remove("hidden");
+}
+
+function hideMessage() {
+  document.getElementById("message").classList.add("hidden");
+}
+
+function updateLanguageDropdown(languages) {
+  const select = document.getElementById("languageSelect");
+  select.innerHTML = '<option value="overall">Overall</option>';
+
+  languages.forEach((language) => {
+    const option = document.createElement("option");
+    option.value = language;
+    option.textContent = language;
+    select.appendChild(option);
+  });
+
+  document.getElementById("languageSection").classList.remove("hidden");
+}
+
 async function handleFetchLeaderboard() {
   const input = document.getElementById("usernames").value;
   const usernames = input
@@ -78,21 +103,14 @@ async function handleFetchLeaderboard() {
     allUsersData = await Promise.all(fetchPromises);
 
     hideMessage();
-    showMessage(`Loaded ${allUsersData.length} users. Leaderboard rendering is added in the next PR.`);
+    const languages = getAllLanguages(allUsersData);
+    updateLanguageDropdown(languages);
+
+    const leaderboard = createLeaderboard(allUsersData, "overall");
+    displayLeaderboard(leaderboard);
   } catch (error) {
     showMessage(error.message || "Failed to fetch leaderboard data", true);
   }
-}
-
-function showMessage(text, isError = false) {
-  const messageDiv = document.getElementById("message");
-  messageDiv.textContent = text;
-  messageDiv.className = isError ? "error" : "loading";
-  messageDiv.classList.remove("hidden");
-}
-
-function hideMessage() {
-  document.getElementById("message").classList.add("hidden");
 }
 
 if (typeof window !== "undefined") {
