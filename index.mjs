@@ -59,6 +59,34 @@ export function createLeaderboard(usersData, language) {
   return usersWithScores;
 }
 
+function displayLeaderboard(leaderboard) {
+  const tableBody = document.getElementById("tableBody");
+  tableBody.innerHTML = "";
+
+  if (leaderboard.length === 0) {
+    tableBody.innerHTML = '<tr><td colspan="3">No users found for this language</td></tr>';
+    return;
+  }
+
+  leaderboard.forEach((user, index) => {
+    const row = document.createElement("tr");
+
+    if (index === 0) {
+      row.className = "top-user";
+    }
+
+    row.innerHTML = `
+      <td>${user.username}</td>
+      <td>${user.clan}</td>
+      <td>${user.score}</td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+
+  document.getElementById("leaderboardTable").classList.remove("hidden");
+}
+
 function showMessage(text, isError = false) {
   const messageDiv = document.getElementById("message");
   messageDiv.textContent = text;
