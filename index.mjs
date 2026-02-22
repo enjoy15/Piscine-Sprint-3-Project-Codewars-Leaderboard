@@ -10,3 +10,28 @@ export async function fetchUserData(username) {
 
   return await response.json();
 }
+
+async function handleFetchLeaderboard() {
+  const input = document.getElementById("usernames").value;
+  const usernames = input
+    .split(",")
+    .map((name) => name.trim())
+    .filter((name) => name);
+
+  if (usernames.length === 0) {
+    showMessage("Please enter at least one username", true);
+    return;
+  }
+
+  showMessage("Loading leaderboard data...");
+
+  try {
+    const fetchPromises = usernames.map((username) => fetchUserData(username));
+    allUsersData = await Promise.all(fetchPromises);
+
+    hideMessage();
+    showMessage(`Loaded ${allUsersData.length} users. Leaderboard rendering is added in the next PR.`);
+  } catch (error) {
+    showMessage(error.message || "Failed to fetch leaderboard data", true);
+  }
+}
