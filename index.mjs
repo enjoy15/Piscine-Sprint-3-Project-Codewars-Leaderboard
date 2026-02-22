@@ -11,6 +11,54 @@ export async function fetchUserData(username) {
   return await response.json();
 }
 
+export function getAllLanguages(usersData) {
+  const languages = new Set();
+
+  for (const user of usersData) {
+    if (user.ranks && user.ranks.languages) {
+      const userLanguages = Object.keys(user.ranks.languages);
+      for (const language of userLanguages) {
+        languages.add(language);
+      }
+    }
+  }
+
+  return Array.from(languages).sort();
+}
+
+export function getScore(user, language) {
+  if (!user.ranks) {
+    return null;
+  }
+
+  if (language === "overall") {
+    return user.ranks.overall ? user.ranks.overall.score : null;
+  }
+
+  return user.ranks.languages && user.ranks.languages[language]
+    ? user.ranks.languages[language].score
+    : null;
+}
+
+export function createLeaderboard(usersData, language) {
+  const usersWithScores = [];
+
+  for (const user of usersData) {
+    const score = getScore(user, language);
+
+    if (score !== null) {
+      usersWithScores.push({
+        username: user.username,
+        clan: user.clan || "",
+        score
+      });
+    }
+  }
+
+  usersWithScores.sort((a, b) => b.score - a.score);
+  return usersWithScores;
+}
+
 async function handleFetchLeaderboard() {
   const input = document.getElementById("usernames").value;
   const usernames = input
