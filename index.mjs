@@ -35,3 +35,18 @@ async function handleFetchLeaderboard() {
     showMessage(error.message || "Failed to fetch leaderboard data", true);
   }
 }
+
+function showMessage(text, isError = false) {
+  const messageDiv = document.getElementById("message");
+  messageDiv.textContent = text;
+  messageDiv.className = isError ? "error" : "loading";
+  messageDiv.classList.remove("hidden");
+}
+
+function hideMessage() {
+  document.getElementById("message").classList.add("hidden");
+}
+
+if (typeof window !== "undefined") {
+  document.getElementById("fetchButton").addEventListener("click", handleFetchLeaderboard);
+}
