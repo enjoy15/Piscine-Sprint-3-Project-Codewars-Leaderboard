@@ -10,7 +10,9 @@ A small web app that compares Codewars users by overall and language-specific ra
 - Hide users who have no rank in the selected language.
 - Highlight the top-ranked user.
 - Show helpful errors for invalid users and failed API requests.
-- 100% Accessible: Optimized to hit a perfect **100 score on Lighthouse Accessibility** ![Accessibility Score](./Lighthouse-accessibility-score.jpg)
+- 100% Accessible: **100 score on Lighthouse Accessibility** 
+
+![Accessibility Score](./Lighthouse-accessibility-score.jpg)
 
 ## Run locally
 1. Install dependencies:
