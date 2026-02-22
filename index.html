@@ -20,6 +20,12 @@
       margin-bottom: 20px;
     }
 
+    .input-hint {
+      margin-top: 4px;
+      color: #444;
+      font-size: 14px;
+    }
+
     label {
       display: block;
       margin-bottom: 5px;
@@ -86,11 +92,13 @@
       background-color: #ffe6e6;
       border-radius: 4px;
       margin: 10px 0;
+      border: 1px solid #d88;
     }
 
     .loading {
       color: #007bff;
       font-style: italic;
+      padding: 10px 0;
     }
 
     .hidden {
@@ -108,12 +116,13 @@
         type="text"
         id="usernames"
         placeholder="e.g. CodeYourFuture,SallyMcGrath,40thieves"
-        aria-label="Codewars usernames"
+        aria-describedby="inputHint"
       >
-      <button id="fetchButton" aria-label="Fetch leaderboard data">Fetch Leaderboard</button>
+      <p id="inputHint" class="input-hint">Use commas between usernames, for example: CodeYourFuture,SallyMcGrath,40thieves</p>
+      <button id="fetchButton" type="button">Fetch Leaderboard</button>
     </div>
 
-    <div id="message" class="hidden" role="alert"></div>
+    <div id="message" class="hidden" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <div id="languageSection" class="hidden">
       <label for="languageSelect">Select language ranking:</label>
@@ -123,11 +132,12 @@
     </div>
 
     <table id="leaderboardTable" class="hidden">
+      <caption>Codewars ranking results</caption>
       <thead>
         <tr>
-          <th>Username</th>
-          <th>Clan</th>
-          <th>Score</th>
+          <th scope="col">Username</th>
+          <th scope="col">Clan</th>
+          <th scope="col">Score</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
