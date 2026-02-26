@@ -26,4 +26,4 @@ This project is configured for Netlify automatic deployment. Changes pushed to t
 
 ## Submission links
 - GitHub repository URL: <https://github.com/enjoy15/Piscine-Sprint-3-Project-Codewars-Leaderboard>
-- Deployed website URL: <https://cyf-codewars-leaderboard-joy.netlify.app/>
+- Deployed website URL: <https://cyf-codewars-leaderboard-jo.netlify.app/>
