@@ -1,26 +1,21 @@
+// Array to store all user data fetched from the API
 let allUsersData = [];
 
+// Function to fetch user data from the Codewars API
+// Takes a username as input and returns the user's data as JSON
 export async function fetchUserData(username) {
   const url = `https://www.codewars.com/api/v1/users/${username}`;
-  let response;
-
-  try {
-    response = await fetch(url);
-  } catch {
-    throw new Error("Unable to reach Codewars API. Please check your internet connection and try again.");
-  }
+  const response = await fetch(url);
 
   if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error(`User "${username}" not found`);
-    }
-
-    throw new Error("Codewars API request failed. Please try again in a moment.");
+    throw new Error(`User "${username}" not found`);
   }
 
   return await response.json();
 }
 
+// Function to extract all unique languages from the users' data
+// Returns a sorted array of language names
 export function getAllLanguages(usersData) {
   const languages = new Set();
 
@@ -36,6 +31,8 @@ export function getAllLanguages(usersData) {
   return Array.from(languages).sort();
 }
 
+// Function to get the score of a user for a specific language
+// Returns the score for the given language or null if not available
 export function getScore(user, language) {
   if (!user.ranks) {
     return null;
@@ -50,6 +47,8 @@ export function getScore(user, language) {
     : null;
 }
 
+// Function to create a leaderboard based on users' scores for a specific language
+// Returns an array of users sorted by their scores in descending order
 export function createLeaderboard(usersData, language) {
   const usersWithScores = [];
 
@@ -69,6 +68,8 @@ export function createLeaderboard(usersData, language) {
   return usersWithScores;
 }
 
+// Function to display the leaderboard in the table
+// Highlights the top user and displays their username, clan, and score
 function displayLeaderboard(leaderboard) {
   const tableBody = document.getElementById("tableBody");
   tableBody.innerHTML = "";
@@ -97,6 +98,8 @@ function displayLeaderboard(leaderboard) {
   document.getElementById("leaderboardTable").classList.remove("hidden");
 }
 
+// Function to show a message to the user
+// Can display error or loading messages
 function showMessage(text, isError = false) {
   const messageDiv = document.getElementById("message");
   messageDiv.textContent = text;
@@ -104,10 +107,13 @@ function showMessage(text, isError = false) {
   messageDiv.classList.remove("hidden");
 }
 
+// Function to hide the message displayed to the user
 function hideMessage() {
   document.getElementById("message").classList.add("hidden");
 }
 
+// Function to update the language dropdown with available languages
+// Adds "Overall" as the default option
 function updateLanguageDropdown(languages) {
   const select = document.getElementById("languageSelect");
   select.innerHTML = '<option value="overall">Overall</option>';
@@ -122,6 +128,8 @@ function updateLanguageDropdown(languages) {
   document.getElementById("languageSection").classList.remove("hidden");
 }
 
+// Function to handle fetching leaderboard data
+// Fetches data for the entered usernames and updates the leaderboard
 async function handleFetchLeaderboard() {
   const input = document.getElementById("usernames").value;
   const usernames = input
@@ -137,13 +145,20 @@ async function handleFetchLeaderboard() {
   showMessage("Loading leaderboard data...");
 
   try {
+    // Fetch data for all usernames entered by the user
     const fetchPromises = usernames.map((username) => fetchUserData(username));
+    // Wait for all fetch requests to complete and store the results in allUsersData
     allUsersData = await Promise.all(fetchPromises);
 
+    // Hide the loading message after data is successfully fetched
     hideMessage();
+
+    // Extract all unique languages from the fetched user data
     const languages = getAllLanguages(allUsersData);
+    // Update the language dropdown with the extracted languages
     updateLanguageDropdown(languages);
 
+    // Create and display the leaderboard for the default "overall" ranking
     const leaderboard = createLeaderboard(allUsersData, "overall");
     displayLeaderboard(leaderboard);
   } catch (error) {
@@ -151,12 +166,15 @@ async function handleFetchLeaderboard() {
   }
 }
 
+// Function to handle changes in the selected language
+// Updates the leaderboard table based on the selected language
 function handleLanguageChange() {
   const selectedLanguage = document.getElementById("languageSelect").value;
   const leaderboard = createLeaderboard(allUsersData, selectedLanguage);
   displayLeaderboard(leaderboard);
 }
 
+// Add event listeners for button click and dropdown change
 if (typeof window !== "undefined") {
   document.getElementById("fetchButton").addEventListener("click", handleFetchLeaderboard);
   document.getElementById("languageSelect").addEventListener("change", handleLanguageChange);

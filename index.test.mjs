@@ -1,7 +1,9 @@
+// Import necessary modules for testing
 import test from "node:test";
 import assert from "node:assert";
 import nock from "nock";
 
+// Import functions to be tested from the main module
 import {
   fetchUserData,
   getAllLanguages,
@@ -9,6 +11,8 @@ import {
   createLeaderboard
 } from "./index.mjs";
 
+// Test for fetchUserData function
+// Verifies that user data is correctly fetched from the Codewars API
 test("fetchUserData fetches user data from Codewars API", async () => {
   const fakeUserData = {
     username: "testuser",
@@ -17,10 +21,12 @@ test("fetchUserData fetches user data from Codewars API", async () => {
     }
   };
 
+  // Mock the API response using nock
   const scope = nock("https://www.codewars.com")
     .get("/api/v1/users/testuser")
     .reply(200, fakeUserData);
 
+  // Call the function and verify the result
   const result = await fetchUserData("testuser");
 
   assert.strictEqual(result.username, "testuser");
@@ -28,6 +34,8 @@ test("fetchUserData fetches user data from Codewars API", async () => {
   assert(scope.isDone(), "API call was not made");
 });
 
+// Test for fetchUserData error handling
+// Verifies that an error is thrown for a non-existent user
 test("fetchUserData throws error for non-existent user", async () => {
   const scope = nock("https://www.codewars.com")
     .get("/api/v1/users/nonexistent")
@@ -41,6 +49,8 @@ test("fetchUserData throws error for non-existent user", async () => {
   assert(scope.isDone(), "API call was not made");
 });
 
+// Test for getAllLanguages function
+// Verifies that unique languages are extracted from user data
 test("getAllLanguages returns unique languages from all users", () => {
   const usersData = [
     {
@@ -67,6 +77,8 @@ test("getAllLanguages returns unique languages from all users", () => {
   assert.deepStrictEqual(languages, ["javascript", "python", "ruby"]);
 });
 
+// Test for getScore function
+// Verifies that the overall score is returned when language is "overall"
 test("getScore returns overall score when language is overall", () => {
   const user = {
     username: "testuser",
@@ -79,6 +91,8 @@ test("getScore returns overall score when language is overall", () => {
   assert.strictEqual(score, 500);
 });
 
+// Test for getScore function
+// Verifies that the language-specific score is returned
 test("getScore returns language-specific score", () => {
   const user = {
     username: "testuser",
@@ -93,6 +107,8 @@ test("getScore returns language-specific score", () => {
   assert.strictEqual(score, 200);
 });
 
+// Test for getScore function
+// Verifies that null is returned for a missing language
 test("getScore returns null for missing language", () => {
   const user = {
     username: "testuser",
@@ -107,6 +123,8 @@ test("getScore returns null for missing language", () => {
   assert.strictEqual(score, null);
 });
 
+// Test for createLeaderboard function
+// Verifies that users are sorted by score in descending order
 test("createLeaderboard sorts users by score descending", () => {
   const usersData = [
     {
@@ -139,6 +157,8 @@ test("createLeaderboard sorts users by score descending", () => {
   assert.strictEqual(leaderboard[2].username, "user1");
 });
 
+// Test for createLeaderboard function
+// Verifies that users without the selected language are excluded
 test("createLeaderboard excludes users missing selected language", () => {
   const usersData = [
     {
